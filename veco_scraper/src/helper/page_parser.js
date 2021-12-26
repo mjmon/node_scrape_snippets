@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getHtml = void 0;
+exports.getTables = exports.getHtml = void 0;
 const https_1 = __importDefault(require("https"));
+const cheerio_1 = __importDefault(require("cheerio"));
 const getHtml = (hostname, path) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => {
         https_1.default.get({
@@ -32,3 +33,9 @@ const getHtml = (hostname, path) => __awaiter(void 0, void 0, void 0, function* 
     });
 });
 exports.getHtml = getHtml;
+const getTables = (html, parsePattern) => {
+    const $ = cheerio_1.default.load(html);
+    const tableElements = $(parsePattern);
+    return tableElements;
+};
+exports.getTables = getTables;

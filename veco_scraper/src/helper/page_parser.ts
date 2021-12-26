@@ -18,3 +18,10 @@ export const getHtml = async (hostname: string, path: string): Promise<string> =
         })
     });
 }
+
+
+export const getTables = (html: string, parsePattern: string): cheerio.Cheerio => {
+    const $ = cheerio.load(html);
+    const tableElements = $(parsePattern);
+    return tableElements;
+};

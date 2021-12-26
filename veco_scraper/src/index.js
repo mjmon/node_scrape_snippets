@@ -1,9 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const getHtml_1 = require("./helper/getHtml");
+const page_parser_1 = require("./helper/page_parser");
 let hostname = "visayanelectric.com";
 let path = "/page.html?main=clients&sub1=Service%20Interruption&sub2=DecemberSchedOutage";
-(0, getHtml_1.getHtml)(hostname, path).then((data) => {
+let parsePattern = "html body div.wrapper div.main div.mainRight div.main_content1 div.leftside_container div.left_content";
+(0, page_parser_1.getHtml)(hostname, path)
+    .then((html) => {
+    return (0, page_parser_1.getTables)(html, parsePattern);
+})
+    .then((data) => {
     console.log(`data: ${data}`);
 }).catch((error) => {
     console.log(`error: ${error}`);
