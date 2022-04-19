@@ -1,4 +1,4 @@
-import { getHtml, getTables,  } from "./helper/page_parser";
+import { getHtml, getTables,  } from "./helper/page_parser/page_parser.js";
 
 
 let hostname = "visayanelectric.com";
