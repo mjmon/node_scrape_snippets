@@ -37,14 +37,12 @@ AxiosInstance.get(url)
               const price1: string = normalizeStringPrice(price1Data);
               const price2: string = normalizeStringPrice(price2Data);
 
-              console.log(name, `${price1 === ""}`);
-
-              
-
               let origPrice: number = 0;
               let promoPrice: number = 0;
 
               if (price1 === "") {
+                  // if there's no discounted price display, price2 is the original price
+                  // and promo is zero
                   origPrice = parseFloat(price2);
                   promoPrice = 0;
               } else { 
