@@ -2,6 +2,7 @@ import axios from 'axios';
 import cheerio from "cheerio";
 import fs from "firebase-admin";
 import dotenv from 'dotenv';
+import { Timestamp } from "@firebase/firestore";
 // import { SpecialOfferDefault } from './models/special_offer';
 dotenv.config({path: './src/config/.env'})
 
@@ -20,10 +21,7 @@ const axiosInstance = axios.create();
 
 let url = "https://toysrus.gorobinsons.ph/collections/all?_=pf&tag=TRU%20RP%20GALLERIA&page=1";
 let parsePattern = "html body main div#shopify-section-static-collection div.productgrid--wrapper ul.boost-pfs-filter-products.productgrid--items.products-per-row-4 li div.productitem";
-const AxiosInstance = axios.create(); 
-
-
-
+const AxiosInstance = axios.create();
 
 AxiosInstance.get(url)
   .then( // Once we have data returned ...
@@ -70,31 +68,39 @@ AxiosInstance.get(url)
           console.log(allProducts);
       
       const robinsonTenant = "k0DgV3qo5Rn9IFHMofME";
+      const jjshopTenant = "U9U1BbdULKZHJGI4iFUG";
+      const tenant = jjshopTenant;
         
-          const robinsonsOffersCollection = db.collection(`/Tenant/${robinsonTenant}/SpecialOffers`);
+          const robinsonsOffersCollection = db.collection(`/Tenant/${tenant}/SpecialOffers`);
       const doc = robinsonsOffersCollection.doc();
       
-      const prod5 =  allProducts.at(5);
+      const prod5 = allProducts.at(5);
+      
+      // fs.firestore.FieldValue.serverTimestamp()
+      // const now = Timestamp.now().toDate;
+      const now = fs.firestore.Timestamp.now();
+        // Timestamp.fromDate(new Date());
           
       doc.set({
             docId: doc.id,
+            isSpecialTenant: true,
             title: prod5?.name,
             description: '',
             connectAttempt: [],
             connections: [],
-            createDate: Date.now(),
-            startDate: Date.now(),
-            endDate: null,
-            updateDate: Date.now(),
+            createDate: now,
+            startDate: now,
+            endDate: now,
+            updateDate: now,
             fbId: null,
             imageurl: prod5?.image,
             images: [prod5?.image],
             originalImages: [prod5?.image],
             originalImageUrl: prod5?.image,        
-            owner: '',
+            owner: 'JJ Shop',
             origPrice: 500,
             promoPrice: 400,
-            tenant: robinsonTenant,
+            tenant: tenant,
             tenantInfo: null,
           }
         )
@@ -108,6 +114,6 @@ AxiosInstance.get(url)
 
 
 /// remove peso sign, comma and extract the price only
-function normalizeStringPrice(price: string): string { 
+function normalizeStringPrice(price: string): string {
     return price.replace("₱", "").replace(",", "").trim().split("\n")[0];
 }

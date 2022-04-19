@@ -56,28 +56,35 @@ response => {
     });
     console.log(allProducts);
     const robinsonTenant = "k0DgV3qo5Rn9IFHMofME";
-    const robinsonsOffersCollection = db.collection(`/Tenant/${robinsonTenant}/SpecialOffers`);
+    const jjshopTenant = "U9U1BbdULKZHJGI4iFUG";
+    const tenant = jjshopTenant;
+    const robinsonsOffersCollection = db.collection(`/Tenant/${tenant}/SpecialOffers`);
     const doc = robinsonsOffersCollection.doc();
     const prod5 = allProducts.at(5);
+    // fs.firestore.FieldValue.serverTimestamp()
+    // const now = Timestamp.now().toDate;
+    const now = firebase_admin_1.default.firestore.Timestamp.now();
+    // Timestamp.fromDate(new Date());
     doc.set({
         docId: doc.id,
+        isSpecialTenant: true,
         title: prod5 === null || prod5 === void 0 ? void 0 : prod5.name,
         description: '',
         connectAttempt: [],
         connections: [],
-        createDate: Date.now(),
-        startDate: Date.now(),
-        endDate: null,
-        updateDate: Date.now(),
+        createDate: now,
+        startDate: now,
+        endDate: now,
+        updateDate: now,
         fbId: null,
         imageurl: prod5 === null || prod5 === void 0 ? void 0 : prod5.image,
         images: [prod5 === null || prod5 === void 0 ? void 0 : prod5.image],
         originalImages: [prod5 === null || prod5 === void 0 ? void 0 : prod5.image],
         originalImageUrl: prod5 === null || prod5 === void 0 ? void 0 : prod5.image,
-        owner: '',
+        owner: 'JJ Shop',
         origPrice: 500,
         promoPrice: 400,
-        tenant: robinsonTenant,
+        tenant: tenant,
         tenantInfo: null,
     });
 })
