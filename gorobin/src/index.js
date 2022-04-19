@@ -5,6 +5,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const cheerio_1 = __importDefault(require("cheerio"));
+const firebase_admin_1 = __importDefault(require("firebase-admin"));
+const dotenv_1 = __importDefault(require("dotenv"));
+// import { SpecialOfferDefault } from './models/special_offer';
+dotenv_1.default.config({ path: './src/config/.env' });
+const serviceAccount = require('./config/serviceAccountKey.json');
+console.log(`DATABASEURL: ${process.env.DATABASEURL}`);
+firebase_admin_1.default.initializeApp({
+    credential: firebase_admin_1.default.credential.cert(serviceAccount),
+    databaseURL: process.env.DATABASEURL
+});
+const db = firebase_admin_1.default.firestore();
 const axiosInstance = axios_1.default.create();
 let url = "https://toysrus.gorobinsons.ph/collections/all?_=pf&tag=TRU%20RP%20GALLERIA&page=1";
 let parsePattern = "html body main div#shopify-section-static-collection div.productgrid--wrapper ul.boost-pfs-filter-products.productgrid--items.products-per-row-4 li div.productitem";
@@ -24,10 +35,11 @@ response => {
         const price2Data = $(element).find('.price--main > span.money').text();
         const price1 = normalizeStringPrice(price1Data);
         const price2 = normalizeStringPrice(price2Data);
-        console.log(name, `${price1 === ""}`);
         let origPrice = 0;
         let promoPrice = 0;
         if (price1 === "") {
+            // if there's no discounted price display, price2 is the original price
+            // and promo is zero
             origPrice = parseFloat(price2);
             promoPrice = 0;
         }
@@ -43,6 +55,31 @@ response => {
         });
     });
     console.log(allProducts);
+    const robinsonTenant = "k0DgV3qo5Rn9IFHMofME";
+    const robinsonsOffersCollection = db.collection(`/Tenant/${robinsonTenant}/SpecialOffers`);
+    const doc = robinsonsOffersCollection.doc();
+    const prod5 = allProducts.at(5);
+    doc.set({
+        docId: doc.id,
+        title: prod5 === null || prod5 === void 0 ? void 0 : prod5.name,
+        description: '',
+        connectAttempt: [],
+        connections: [],
+        createDate: Date.now(),
+        startDate: Date.now(),
+        endDate: null,
+        updateDate: Date.now(),
+        fbId: null,
+        imageurl: prod5 === null || prod5 === void 0 ? void 0 : prod5.image,
+        images: [prod5 === null || prod5 === void 0 ? void 0 : prod5.image],
+        originalImages: [prod5 === null || prod5 === void 0 ? void 0 : prod5.image],
+        originalImageUrl: prod5 === null || prod5 === void 0 ? void 0 : prod5.image,
+        owner: '',
+        origPrice: 500,
+        promoPrice: 400,
+        tenant: robinsonTenant,
+        tenantInfo: null,
+    });
 })
     .catch(console.error); //
 /// remove peso sign, comma and extract the price only

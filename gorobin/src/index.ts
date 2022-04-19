@@ -1,6 +1,20 @@
-import { getHtml, getTables } from "./helper/page_parser/page_parser";
 import axios from 'axios';
 import cheerio from "cheerio";
+import fs from "firebase-admin";
+import dotenv from 'dotenv';
+// import { SpecialOfferDefault } from './models/special_offer';
+dotenv.config({path: './src/config/.env'})
+
+const serviceAccount = require('./config/serviceAccountKey.json');
+
+console.log(`DATABASEURL: ${process.env.DATABASEURL}`);
+
+fs.initializeApp({
+  credential: fs.credential.cert(serviceAccount),
+  databaseURL:process.env.DATABASEURL
+});
+
+const db = fs.firestore();
 
 const axiosInstance = axios.create();
 
@@ -8,12 +22,7 @@ let url = "https://toysrus.gorobinsons.ph/collections/all?_=pf&tag=TRU%20RP%20GA
 let parsePattern = "html body main div#shopify-section-static-collection div.productgrid--wrapper ul.boost-pfs-filter-products.productgrid--items.products-per-row-4 li div.productitem";
 const AxiosInstance = axios.create(); 
 
-interface Product { 
-    name: string;
-    origPrice: number;
-    promoPrice: number;
-    image?: string;
-}
+
 
 
 AxiosInstance.get(url)
@@ -59,6 +68,37 @@ AxiosInstance.get(url)
           });
 
           console.log(allProducts);
+      
+      const robinsonTenant = "k0DgV3qo5Rn9IFHMofME";
+        
+          const robinsonsOffersCollection = db.collection(`/Tenant/${robinsonTenant}/SpecialOffers`);
+      const doc = robinsonsOffersCollection.doc();
+      
+      const prod5 =  allProducts.at(5);
+          
+      doc.set({
+            docId: doc.id,
+            title: prod5?.name,
+            description: '',
+            connectAttempt: [],
+            connections: [],
+            createDate: Date.now(),
+            startDate: Date.now(),
+            endDate: null,
+            updateDate: Date.now(),
+            fbId: null,
+            imageurl: prod5?.image,
+            images: [prod5?.image],
+            originalImages: [prod5?.image],
+            originalImageUrl: prod5?.image,        
+            owner: '',
+            origPrice: 500,
+            promoPrice: 400,
+            tenant: robinsonTenant,
+            tenantInfo: null,
+          }
+        )
+          
 
 
 
