@@ -55,7 +55,7 @@ function performScrapeAndWrite(url) {
                 origPrice = parseFloat(price1);
                 promoPrice = parseFloat(price2);
             }
-            if (origPrice > 0 && promoPrice > 0) {
+            if (origPrice > 0 && promoPrice > 0 && imageSrc != null) {
                 allProducts.push({
                     name,
                     origPrice: origPrice,
