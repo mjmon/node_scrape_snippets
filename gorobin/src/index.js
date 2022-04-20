@@ -20,7 +20,8 @@ const now = firebase_admin_1.default.firestore.Timestamp.now();
 //TRU RP GALLERIA
 let parsePattern = "html body main div#shopify-section-static-collection div.productgrid--wrapper ul.boost-pfs-filter-products.productgrid--items.products-per-row-4 li div.productitem";
 const AxiosInstance = axios_1.default.create();
-let tag = "TRU RP GALLERIA";
+let isRobinson = true;
+let tag = isRobinson ? "RDS RP ERMITA" : "TRU RP GALLERIA";
 //up to page 10 for now
 let pages = [...Array(10).keys()];
 Promise.all(pages.map((page) => {
@@ -71,12 +72,12 @@ function performScrapeAndWrite(url) {
 function writeToFirestore(allProducts) {
     const robinsonTenantId = "k0DgV3qo5Rn9IFHMofME";
     const toysRusTenantId = "E1lYfBE3TcpAgO1x2cwr";
-    const tenantid = toysRusTenantId;
+    const tenantid = isRobinson ? robinsonTenantId : toysRusTenantId;
     const toysRusCollection = db.collection(`/Tenant/${tenantid}/SpecialOffers`);
-    let dummyTenantInfo = {
+    let tenantInfo = {
         address: "BGC Taguig",
         allowBackorders: true,
-        businessName: "Toys R Us",
+        businessName: isRobinson ? "Robinsons Department Store" : "Toys R Us",
         categoryCount: 0,
         connections: [],
         createDate: now,
@@ -85,8 +86,8 @@ function writeToFirestore(allProducts) {
         facebook: null,
         isSetupComplete: true,
         isSpecialTenant: true,
-        latitude: null,
-        longitude: null,
+        latitude: 14.5409,
+        longitude: 121.0503,
         natureOfBusiness: "Others",
         plan: "free",
         topCardLayer: 0,
@@ -114,7 +115,7 @@ function writeToFirestore(allProducts) {
             origPrice: prod === null || prod === void 0 ? void 0 : prod.origPrice,
             promoPrice: prod === null || prod === void 0 ? void 0 : prod.promoPrice,
             tenant: tenantid,
-            tenantInfo: dummyTenantInfo
+            tenantInfo: tenantInfo
         });
     });
 }

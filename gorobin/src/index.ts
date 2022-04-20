@@ -23,7 +23,7 @@ const db = fs.firestore();
 let parsePattern = "html body main div#shopify-section-static-collection div.productgrid--wrapper ul.boost-pfs-filter-products.productgrid--items.products-per-row-4 li div.productitem";
 const AxiosInstance = axios.create();
 
-let isRobinson = false;
+let isRobinson = true;
 
 let tag = isRobinson ? "RDS RP ERMITA" : "TRU RP GALLERIA";
 
@@ -87,24 +87,24 @@ AxiosInstance.get(encodeURI(url))
 function writeToFirestore(allProducts: Product[]) { 
       const robinsonTenantId = "k0DgV3qo5Rn9IFHMofME";
       const toysRusTenantId = "E1lYfBE3TcpAgO1x2cwr";
-      const tenantid = toysRusTenantId;
+      const tenantid =  isRobinson ? robinsonTenantId: toysRusTenantId;
         
       const toysRusCollection = db.collection(`/Tenant/${tenantid}/SpecialOffers`);
 
-      let dummyTenantInfo = {
-        address: "BGC Taguig",
+      let tenantInfo = {
+        address:  "BGC Taguig",
         allowBackorders: true,
-        businessName: "Toys R Us",
+        businessName: isRobinson? "Robinsons Department Store": "Toys R Us",
         categoryCount: 0,
-         connections: [],
+        connections: [],
         createDate: now,
         docId: tenantid,
         expireDate: now,
         facebook: null,
         isSetupComplete: true,
         isSpecialTenant: true,
-        latitude: null,
-        longitude: null,
+        latitude: 14.5409,
+        longitude: 121.0503,
         natureOfBusiness: "Others",
         plan: "free",
         topCardLayer: 0,
@@ -133,7 +133,7 @@ function writeToFirestore(allProducts: Product[]) {
               origPrice: prod?.origPrice,
               promoPrice: prod?.promoPrice ,
               tenant: tenantid,
-              tenantInfo: dummyTenantInfo
+              tenantInfo: tenantInfo
         });
       })
 }
