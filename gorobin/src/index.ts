@@ -23,7 +23,9 @@ const db = fs.firestore();
 let parsePattern = "html body main div#shopify-section-static-collection div.productgrid--wrapper ul.boost-pfs-filter-products.productgrid--items.products-per-row-4 li div.productitem";
 const AxiosInstance = axios.create();
 
-let tag = "TRU RP GALLERIA";
+let isRobinson = false;
+
+let tag = isRobinson ? "RDS RP ERMITA" : "TRU RP GALLERIA";
 
 //up to page 10 for now
 let pages = [...Array(10).keys()];
