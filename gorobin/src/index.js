@@ -17,13 +17,14 @@ firebase_admin_1.default.initializeApp({
 });
 const db = firebase_admin_1.default.firestore();
 const now = firebase_admin_1.default.firestore.Timestamp.now();
+const nextYear = firebase_admin_1.default.firestore.Timestamp.fromDate(getNextYearDate());
 //TRU RP GALLERIA
 let parsePattern = "html body main div#shopify-section-static-collection div.productgrid--wrapper ul.boost-pfs-filter-products.productgrid--items.products-per-row-4 li div.productitem";
 const AxiosInstance = axios_1.default.create();
-let isRobinson = true;
+let isRobinson = false;
 let tag = isRobinson ? "RDS RP ERMITA" : "TRU RP GALLERIA";
 //up to page 10 for now
-let pages = [...Array(10).keys()];
+let pages = [...Array(15).keys()];
 Promise.all(pages.map((page) => {
     let url = `https://toysrus.gorobinsons.ph/collections/all?_=pf&tag=${tag}&page=${page}`;
     performScrapeAndWrite(url);
@@ -104,7 +105,7 @@ function writeToFirestore(allProducts) {
             connections: [],
             createDate: now,
             startDate: now,
-            endDate: now,
+            endDate: nextYear,
             updateDate: now,
             fbId: null,
             imageUrl: prod === null || prod === void 0 ? void 0 : prod.image,
@@ -122,4 +123,9 @@ function writeToFirestore(allProducts) {
 /// remove peso sign, comma and extract the price only
 function normalizeStringPrice(price) {
     return price.replace("₱", "").replace(",", "").trim().split("\n")[0];
+}
+function getNextYearDate() {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() + 1);
+    return date;
 }
