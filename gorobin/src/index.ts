@@ -6,7 +6,7 @@ import { Timestamp } from "@firebase/firestore";
 // import { SpecialOfferDefault } from './models/special_offer';
 dotenv.config({path: './src/config/.env'})
 
-const serviceAccount = require('./config/serviceAccountKey.json');
+const serviceAccount = require('./config/staging_serviceAccountKey.json');
 
 console.log(`DATABASEURL: ${process.env.DATABASEURL}`);
 
