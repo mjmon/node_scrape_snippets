@@ -34,7 +34,7 @@ const tenantCollection = db.collection(`Tenant`);
 const scrapeAndWriteOffers = (tenantData) => __awaiter(void 0, void 0, void 0, function* () {
     const url = tenantData['offerLink'];
     //up to page 10 for now
-    let pages = [...Array(10).keys()];
+    let pages = [...Array(5).keys()];
     try {
         Promise.all(pages.map((page) => {
             let pageUrl = `${url}&page=${page + 1}`;
@@ -52,18 +52,14 @@ const scrapeAndWriteOffers = (tenantData) => __awaiter(void 0, void 0, void 0, f
                     const imageSrc = $(element).find('a.productitem--image-link > figure').find('img').attr('src');
                     let price1Data = $(element).find('.price--compare-at > span.money').text();
                     let price2Data = $(element).find('.price--main > span.money').text();
+                    // if price1 Data or price2 is empty, we are on a robinson site so we need to use different pattern
                     if (price1Data.length === 0) {
-                        // console.log('price1Data is empty')
                         price1Data =
                             $(element).find('span.money.price__compare-at--single').text();
-                        // console.log(`redo price1Data: ${price1Data}`)
                     }
                     if (price2Data.length === 0) {
-                        // console.log('price2Data is empty')
                         price2Data =
                             $(element).find('div.price__current > span').text();
-                        price2Data.replace("Current price", "");
-                        // console.log(`redo price2Data: ${price2Data}`)
                     }
                     const price1 = normalizeStringPrice(price1Data);
                     const price2 = normalizeStringPrice(price2Data);

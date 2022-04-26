@@ -30,7 +30,7 @@ const scrapeAndWriteOffers = async (tenantData: fs.firestore.DocumentData) => {
     const url = tenantData['offerLink'];
   
     //up to page 10 for now
-  let pages = [...Array(10).keys()];
+  let pages = [...Array(5).keys()];
   
   try {
     Promise.all(pages.map((page) => {
