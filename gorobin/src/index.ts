@@ -30,7 +30,7 @@ let isRobinson = false;
 let tag = isRobinson ? "RDS RP ERMITA" : "TRU RP GALLERIA";
 
 //up to page 10 for now
-let pages = [...Array(15).keys()];
+let pages = [...Array(1).keys()];
 
 Promise.all(pages.map((page) => {
   let url = `https://toysrus.gorobinsons.ph/collections/all?_=pf&tag=${tag}&page=${page}`;

@@ -9,7 +9,7 @@ const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const dotenv_1 = __importDefault(require("dotenv"));
 // import { SpecialOfferDefault } from './models/special_offer';
 dotenv_1.default.config({ path: './src/config/.env' });
-const serviceAccount = require('./config/serviceAccountKey.json');
+const serviceAccount = require('./config/staging_serviceAccountKey.json');
 console.log(`DATABASEURL: ${process.env.DATABASEURL}`);
 firebase_admin_1.default.initializeApp({
     credential: firebase_admin_1.default.credential.cert(serviceAccount),
@@ -24,7 +24,7 @@ const AxiosInstance = axios_1.default.create();
 let isRobinson = false;
 let tag = isRobinson ? "RDS RP ERMITA" : "TRU RP GALLERIA";
 //up to page 10 for now
-let pages = [...Array(15).keys()];
+let pages = [...Array(1).keys()];
 Promise.all(pages.map((page) => {
     let url = `https://toysrus.gorobinsons.ph/collections/all?_=pf&tag=${tag}&page=${page}`;
     performScrapeAndWrite(url);
