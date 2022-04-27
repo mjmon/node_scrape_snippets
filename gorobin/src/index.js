@@ -91,6 +91,7 @@ const scrapeAndWriteOffers = (tenantData) => __awaiter(void 0, void 0, void 0, f
                 const latitude = tenantData['latitude'];
                 const longitude = tenantData['longitude'];
                 const offerLink = tenantData['offerLink'];
+                const fbId = tenantData['facebook']['id'];
                 // write to firestore
                 const currentTenantCollection = db.collection(`/Tenant/${tenantId}/SpecialOffers`);
                 let tenantInfo = {
@@ -102,7 +103,9 @@ const scrapeAndWriteOffers = (tenantData) => __awaiter(void 0, void 0, void 0, f
                     createDate: now,
                     docId: tenantId,
                     expireDate: now,
-                    facebook: null,
+                    facebook: {
+                        id: fbId
+                    },
                     isSetupComplete: true,
                     isSpecialTenant: true,
                     latitude: latitude,
@@ -126,7 +129,7 @@ const scrapeAndWriteOffers = (tenantData) => __awaiter(void 0, void 0, void 0, f
                         startDate: now,
                         endDate: nextYear,
                         updateDate: now,
-                        fbId: null,
+                        fbId: fbId,
                         imageUrl: prod === null || prod === void 0 ? void 0 : prod.image,
                         images: [prod === null || prod === void 0 ? void 0 : prod.image],
                         originalImages: [prod === null || prod === void 0 ? void 0 : prod.image],
@@ -151,8 +154,18 @@ const scrapeAndWriteOffers = (tenantData) => __awaiter(void 0, void 0, void 0, f
     }
 });
 const getSpecialTenants = () => __awaiter(void 0, void 0, void 0, function* () {
-    const specialTenants = yield tenantCollection.where('isSpecialTenant', "==", true).get();
-    return specialTenants.docs;
+    const specialTenants = yield tenantCollection.where('isSpecialTenant', "==", true)
+        .get();
+    // const specialTenants = await tenantCollection.where('businessName', "==", "Robinsons Department Store").get();
+    //filter with facebook id
+    let docs = specialTenants.docs;
+    let filtered = [];
+    docs.forEach((doc) => {
+        if (doc.data()['facebook'] != null) {
+            filtered.push(doc);
+        }
+    });
+    return filtered;
 });
 const processSpecialTenants = () => __awaiter(void 0, void 0, void 0, function* () {
     let specialTenants = (yield getSpecialTenants());

@@ -96,6 +96,7 @@ const scrapeAndWriteOffers = async (tenantData: fs.firestore.DocumentData) => {
                 const latitude = tenantData['latitude'];
                 const longitude = tenantData['longitude'];
                 const offerLink = tenantData['offerLink'];
+                const fbId = tenantData['facebook']['id'];
             
               // write to firestore
                 const currentTenantCollection = db.collection(`/Tenant/${tenantId}/SpecialOffers`);
@@ -109,7 +110,9 @@ const scrapeAndWriteOffers = async (tenantData: fs.firestore.DocumentData) => {
                   createDate: now,
                   docId: tenantId,
                   expireDate: now,
-                  facebook: null,
+                  facebook: {
+                    id: fbId
+                  },
                   isSetupComplete: true,
                   isSpecialTenant: true,
                   latitude: latitude,
@@ -134,7 +137,7 @@ const scrapeAndWriteOffers = async (tenantData: fs.firestore.DocumentData) => {
                     startDate: now,
                     endDate: nextYear,
                     updateDate: now,
-                    fbId: null,
+                    fbId: fbId,
                     imageUrl: prod?.image,
                     images: [prod?.image],
                     originalImages: [prod?.image],
@@ -164,9 +167,22 @@ const scrapeAndWriteOffers = async (tenantData: fs.firestore.DocumentData) => {
 
 
 const getSpecialTenants = async () => { 
-  const specialTenants = await tenantCollection.where('isSpecialTenant', "==", true).get();
+  const specialTenants = await tenantCollection.where('isSpecialTenant', "==", true)
+    .get();
+  // const specialTenants = await tenantCollection.where('businessName', "==", "Robinsons Department Store").get();
+  //filter with facebook id
 
-  return specialTenants.docs;
+  let docs = specialTenants.docs;
+
+  let filtered: fs.firestore.QueryDocumentSnapshot<fs.firestore.DocumentData>[] = [];
+
+  docs.forEach((doc) => { 
+    if (doc.data()['facebook'] != null) { 
+      filtered.push(doc);
+    }
+  })
+  
+  return filtered;
 }
 
 const processSpecialTenants = async () => {
