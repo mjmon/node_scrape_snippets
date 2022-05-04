@@ -7,6 +7,8 @@ import { Timestamp } from "@firebase/firestore";
 dotenv.config({path: './src/config/.env'})
 
 const serviceAccount = require('./config/staging_serviceAccountKey.json');
+// const serviceAccount = require('./config/prod_serviceAccount.json');
+
 
 const now = fs.firestore.Timestamp.now();
 const nextYear = fs.firestore.Timestamp.fromDate(getNextYearDate());
