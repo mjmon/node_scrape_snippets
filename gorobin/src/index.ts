@@ -6,8 +6,8 @@ import { Timestamp } from "@firebase/firestore";
 // import { SpecialOfferDefault } from './models/special_offer';
 dotenv.config({path: './src/config/.env'})
 
-const serviceAccount = require('./config/staging_serviceAccountKey.json');
-// const serviceAccount = require('./config/prod_serviceAccount.json');
+// const serviceAccount = require('./config/staging_serviceAccountKey.json');
+const serviceAccount = require('./config/prod_serviceAccount.json');
 
 
 const now = fs.firestore.Timestamp.now();
@@ -32,7 +32,7 @@ const scrapeAndWriteOffers = async (tenantData: fs.firestore.DocumentData) => {
     const url = tenantData['offerLink'];
   
     //up to page 10 for now
-  let pages = [...Array(5).keys()];
+  let pages = [...Array(1).keys()];
   
   try {
     Promise.all(pages.map((page) => {
@@ -82,7 +82,7 @@ const scrapeAndWriteOffers = async (tenantData: fs.firestore.DocumentData) => {
                         origPrice = parseFloat(price1);
                         promoPrice = parseFloat(price2);
                     }
-                  if (origPrice > 0 && promoPrice > 0 && imageSrc != null) { 
+                  if (origPrice > 0 && promoPrice > 0 && imageSrc != null && allProducts.length < 5) { 
                     allProducts.push({
                         name,
                         origPrice: origPrice,

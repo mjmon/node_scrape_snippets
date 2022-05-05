@@ -19,7 +19,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 // import { SpecialOfferDefault } from './models/special_offer';
 dotenv_1.default.config({ path: './src/config/.env' });
 // const serviceAccount = require('./config/staging_serviceAccountKey.json');
-const serviceAccount = require('./config/avigate2_serviceAccount.json');
+const serviceAccount = require('./config/prod_serviceAccount.json');
 const now = firebase_admin_1.default.firestore.Timestamp.now();
 const nextYear = firebase_admin_1.default.firestore.Timestamp.fromDate(getNextYearDate());
 let parsePattern = "html body main div#shopify-section-static-collection div.productgrid--wrapper ul.boost-pfs-filter-products.productgrid--items.products-per-row-4 li div.productitem";
@@ -35,7 +35,7 @@ const tenantCollection = db.collection(`Tenant`);
 const scrapeAndWriteOffers = (tenantData) => __awaiter(void 0, void 0, void 0, function* () {
     const url = tenantData['offerLink'];
     //up to page 10 for now
-    let pages = [...Array(5).keys()];
+    let pages = [...Array(1).keys()];
     try {
         Promise.all(pages.map((page) => {
             let pageUrl = `${url}&page=${page + 1}`;
@@ -77,7 +77,7 @@ const scrapeAndWriteOffers = (tenantData) => __awaiter(void 0, void 0, void 0, f
                         origPrice = parseFloat(price1);
                         promoPrice = parseFloat(price2);
                     }
-                    if (origPrice > 0 && promoPrice > 0 && imageSrc != null) {
+                    if (origPrice > 0 && promoPrice > 0 && imageSrc != null && allProducts.length < 5) {
                         allProducts.push({
                             name,
                             origPrice: origPrice,
