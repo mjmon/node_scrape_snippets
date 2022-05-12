@@ -105,24 +105,14 @@ const scrapeAndWriteOffers = async (tenantData: fs.firestore.DocumentData) => {
 
                 let tenantInfo = {
                   address:  address,
-                  allowBackorders: true,
                   businessName: businessName,
-                  categoryCount: 0,
-                  connections: [],
-                  createDate: now,
                   docId: tenantId,
-                  expireDate: now,
                   facebook: {
                     id: fbId
                   },
-                  isSetupComplete: true,
                   isSpecialTenant: true,
                   latitude: latitude,
                   longitude: longitude,
-                  natureOfBusiness: "Others",
-                  plan: "free",
-                  topCardLayer: 0,
-                  undeliveredReminder: "1 hour",
                   offerLink: offerLink
                 }
 

@@ -97,24 +97,14 @@ const scrapeAndWriteOffers = (tenantData) => __awaiter(void 0, void 0, void 0, f
                 const currentTenantCollection = db.collection(`/Tenant/${tenantId}/SpecialOffers`);
                 let tenantInfo = {
                     address: address,
-                    allowBackorders: true,
                     businessName: businessName,
-                    categoryCount: 0,
-                    connections: [],
-                    createDate: now,
                     docId: tenantId,
-                    expireDate: now,
                     facebook: {
                         id: fbId
                     },
-                    isSetupComplete: true,
                     isSpecialTenant: true,
                     latitude: latitude,
                     longitude: longitude,
-                    natureOfBusiness: "Others",
-                    plan: "free",
-                    topCardLayer: 0,
-                    undeliveredReminder: "1 hour",
                     offerLink: offerLink
                 };
                 allProducts.forEach((prod) => {
